@@ -29,11 +29,12 @@ for link in links:
     url = link
     res = requests.get(url)
 
-    c.execute("SELECT link from residents where link = ?;", (link)))
+    #CHECK IF LINK ALREADY EXISTS
+    c.execute("SELECT link from residents where link =?;", (link,))
     conn.commit()
-    c.fetchone
-    # ADD AND IF URL NOT EXISTS IN DB
-    if res.ok and foundlink:
+    foundlink = c.fetchone()
+    
+    if res.ok and not foundlink:
         soup = BeautifulSoup(res.text,'html.parser')
         
         #PHOTOS

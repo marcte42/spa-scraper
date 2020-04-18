@@ -49,7 +49,7 @@ for link in links:
         #DESCRIPTION
         description = soup.find("div", {"class": "field-type-text-with-summary"})
 
-        if description.has_attr('p'):
+        if description.find('p'):
             description = description.p.contents[0]
         else:
             description = ""

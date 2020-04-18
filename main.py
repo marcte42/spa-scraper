@@ -8,7 +8,7 @@ c = conn.cursor()
 links = []
 page = 0
 while 1:
-    url = 'https://www.la-spa.fr/adopter-animaux?field_refuge_animal_target_id=118&page='+str(page)
+    url = 'https://www.la-spa.fr/adopter-animaux?field_refuge_animal_target_id=129&page='+str(page)
 
     res = requests.get(url)
 
@@ -43,16 +43,19 @@ for link in links:
         for div in divs:
             imgs = div.find_all("img", {"typeof": "foaf:Image"})
             for img in imgs:
-                print(img['src'])
                 c.execute("INSERT INTO photos VALUES(?, ?);", (url, img['src']))
                 conn.commit()
 
         #DESCRIPTION
         description = soup.find("div", {"class": "field-type-text-with-summary"})
-        print(description.p.contents[0])
+
+        if description.has_attr('p'):
+            description = description.p.contents[0]
+        else:
+            description = ""
 
         #LINK
         print(url)
-        c.execute("INSERT INTO residents VALUES(?, ?);", (url, description.p.contents[0]))
+        c.execute("INSERT INTO residents VALUES(?, ?);", (url, description))
         conn.commit()
 conn.close()
